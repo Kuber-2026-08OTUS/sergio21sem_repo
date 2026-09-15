@@ -63,8 +63,6 @@ Review Required:
           - kubernetes-logging/**
           - kubernetes-debug/**
 
-# --- Метки по конкретным типам манифестов ---
-
 namespace:
   - changed-files:
       - any-glob-to-any-file:

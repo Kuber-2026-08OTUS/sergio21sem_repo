@@ -1,6 +1,10 @@
 name: "Pull Request Labeler"
 
-on: pull_request_target
+# Для PR из веток этого же репозитория достаточно pull_request:
+# workflow и блок permissions берутся из ветки PR и работают сразу.
+# (pull_request_target выполняет workflow из main и не позволяет
+# проверить изменения в текущем PR до мержа)
+on: pull_request
 
 permissions:
   contents: read
