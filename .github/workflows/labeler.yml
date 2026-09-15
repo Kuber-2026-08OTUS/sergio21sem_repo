@@ -1,11 +1,21 @@
 name: "Pull Request Labeler"
 
-on: pull_request_target
+# Для PR из веток этого же репозитория достаточно pull_request:
+# workflow и блок permissions берутся из ветки PR и работают сразу.
+# (pull_request_target выполняет workflow из main и не позволяет
+# проверить изменения в текущем PR до мержа)
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 
 jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
