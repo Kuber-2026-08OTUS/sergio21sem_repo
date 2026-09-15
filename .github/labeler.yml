@@ -1,48 +1,80 @@
 kubernetes-intro:
-  - kubernetes-intro/*
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-intro/**
 
 kubernetes-controllers:
-  - kubernetes-controllers/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-controllers/**
+
 kubernetes-security:
-  - kubernetes-security/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-security/**
+
 kubernetes-debug:
-  - kubernetes-debug/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-debug/**
+
 kubernetes-gitops:
-  - kubernetes-gitops/*
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-gitops/**
 
 kubernetes-logging:
-  - kubernetes-logging/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-logging/**
+
 kubernetes-monitoring:
-  - kubernetes-monitoring/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-monitoring/**
+
 kubernetes-networks:
-  - kubernetes-networks/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-networks/**
+
 kubernetes-operators:
-  - kubernetes-operators/*
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-operators/**
   
 kubernetes-production-clusters:
-  - kubernetes-production-clusters/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-production-clusters/**
+
 kubernetes-storage:
-  - kubernetes-storage/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-storage/**
+
 kubernetes-templating:
-  - kubernetes-templating/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-templating/**
+
 kubernetes-vault:
-  - kubernetes-vault/*
-  
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-vault/**
+
 kubernetes-volumes:
-  - kubernetes-volumes/*
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-volumes/**
   
 Review Required:
-  - kubernetes-templating/*
-  - kubernetes-production-clusters/*
-  - kubernetes-monitoring/*
-  - kubernetes-logging/*
-  - kubernetes-debug/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - kubernetes-templating/**
+          - kubernetes-production-clusters/**
+          - kubernetes-monitoring/**
+          - kubernetes-logging/**
+          - kubernetes-debug/**
+
+# --- Метки по конкретным типам манифестов ---
+
+namespace:
+  - changed-files:
+      - any-glob-to-any-file:
+          - kubernetes-intro/namespace.yaml
+          - kubernetes-controllers/namespace.yaml
+
+pod:
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-intro/pod.yaml
+
+deployment:
+  - changed-files:
+      - any-glob-to-any-file: kubernetes-controllers/deployment.yaml
