@@ -1,7 +1,17 @@
+<<<<<<< HEAD
 name: Pull Request Labeler
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+=======
+name: "Pull Request Labeler"
+
+# Для PR из веток этого же репозитория достаточно pull_request:
+# workflow и блок permissions берутся из ветки PR и работают сразу.
+# (pull_request_target выполняет workflow из main и не позволяет
+# проверить изменения в текущем PR до мержа)
+on: pull_request
+>>>>>>> ed36e4b (fix labeler: migrate to v5, add permissions, use pull_request trigger)
 
 permissions:
   contents: read
