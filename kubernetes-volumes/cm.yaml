@@ -1,0 +1,9 @@
+#https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-demo
+  namespace: homework
+data:
+  player_initial_lives: "3"
+  file: "some content from configMap"
