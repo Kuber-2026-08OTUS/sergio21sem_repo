@@ -20,6 +20,7 @@ spec:
       labels:
         app: busybox
     spec:
+      serviceAccountName: monitoring
       initContainers:
         - name: init-container
           image: busybox:1.37
