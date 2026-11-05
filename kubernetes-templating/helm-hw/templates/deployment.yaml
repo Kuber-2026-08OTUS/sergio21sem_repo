@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-deployment
+  namespace: homework
+  labels:
+    app: busybox
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      initContainers:
+        - name: init-container
+          image: busybox:1.37
+          command:
+            - sh
+            - -c
+            - |
+              wget -O /init/index.html https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+          volumeMounts:
+            - name: homework-volume
+              mountPath: /init
+
+      containers:
+        - name: web
+          image: busybox:1.37
+          command:
+            - sh
+            - -c
+            - |
+              httpd -f -p 8000 -h /homework
+          ports:
+            - containerPort: 8000
+
+          env:
+            # Define the environment variable
+            - name: PLAYER_INITIAL_LIVES
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-demo           # The ConfigMap this value comes from.
+                  key: player_initial_lives # The key to fetch.
+
+          volumeMounts:
+            - name: homework-volume
+              mountPath: /homework
+            - name: config
+              mountPath: /homework/conf
+              readOnly: true
+
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 8000
+              httpHeaders:
+                - name: Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - rm -f /homework/index.html
+
+      volumes:
+        - name: homework-volume
+          persistentVolumeClaim:
+            claimName: semenov-pv-claim
+        - name: config
+          configMap:
+            name: cm-demo
