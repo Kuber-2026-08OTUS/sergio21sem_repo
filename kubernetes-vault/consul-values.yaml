@@ -1,0 +1,25 @@
+# Значения для helm-чарта hashicorp/consul (https://github.com/hashicorp/consul-k8s)
+# Установка: helm install consul hashicorp/consul -n consul --create-namespace -f consul-values.yaml
+
+global:
+  # Имя префикса для всех ресурсов, созданных чартом.
+  # Сервис серверов будет доступен как consul-server.consul.svc:8500
+  name: consul
+  datacenter: dc1
+  # Автоматическая генерация ключа шифрования gossip-трафика
+  gossipEncryption:
+    autoGenerate: true
+
+# Отключаем компоненты, не нужные для backend-хранилища Vault
+dns:
+  enabled: false
+connectInject:
+  enabled: false
+syncCatalog:
+  enabled: false
+
+server:
+  # 3 реплики Consul-сервера (требование ДЗ)
+  replicas: 3
+  # Для bootstrapping кластера из 3 серверов
+  bootstrapExpect: 3
