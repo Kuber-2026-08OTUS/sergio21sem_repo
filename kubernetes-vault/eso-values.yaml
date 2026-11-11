@@ -1,14 +1,9 @@
-# Значения для helm-чарта external-secrets (https://github.com/external-secrets/external-secrets)
-# Установка:
+# helm-чарта external-secrets (https://github.com/external-secrets/external-secrets)
 #   helm repo add external-secrets https://charts.external-secrets.io
 #   helm install external-secrets external-secrets/external-secrets \
 #     --namespace vault --create-namespace -f eso-values.yaml
 #
 # CRD-объекты (SecretStore, ClusterSecretStore, ExternalSecret и т.д.)
-# устанавливаются чартом автоматически (templates/crds).
-# Ниже переопределены только минимальные параметры, остальное — значения по умолчанию.
-
-# Один реплика-контроллер для учебного кластера
 replicaCount: 1
 
 webhook:

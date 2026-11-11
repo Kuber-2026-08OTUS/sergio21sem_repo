@@ -8,8 +8,7 @@ metadata:
   name: vault-auth
   namespace: vault
 ---
-# Роль system:auth-delegator позволяет Vault вызывать TokenReview API
-# для проверки (валидации) JWT-токенов сервисных аккаунтов
+# Роль system:auth-delegator
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -24,9 +23,6 @@ subjects:
     name: vault-auth
     namespace: vault
 ---
-# Начиная с Kubernetes 1.24 долгоживущие (static) токены SA не создаются автоматически.
-# Этот Secret запрашивает у API долгоживущий токен для vault-auth,
-# который нужен для конфигурации auth/kubernetes в Vault.
 apiVersion: v1
 kind: Secret
 metadata:
