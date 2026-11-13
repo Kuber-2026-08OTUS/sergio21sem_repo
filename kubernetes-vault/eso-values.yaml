@@ -1,0 +1,10 @@
+# helm-чарта external-secrets (https://github.com/external-secrets/external-secrets)
+#   helm repo add external-secrets https://charts.external-secrets.io
+#   helm install external-secrets external-secrets/external-secrets \
+#     --namespace vault --create-namespace -f eso-values.yaml
+#
+# CRD-объекты (SecretStore, ClusterSecretStore, ExternalSecret и т.д.)
+replicaCount: 1
+
+webhook:
+  replicaCount: 1

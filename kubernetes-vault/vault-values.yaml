@@ -1,0 +1,20 @@
+# Значения для helm-чарта hashicorp/vault (https://github.com/hashicorp/vault-helm)
+# helm install vault hashicorp/vault -n vault --create-namespace -f vault-values.yaml
+
+global:
+  enabled: true
+  # TLS внутри кластера отключен для простоты (учебное ДЗ)
+  tlsDisable: true
+
+injector:
+  enabled: false
+
+server:
+  ha:
+    enabled: true
+    replicas: 3
+    storage: |
+      consul {
+        path = "vault/"
+        address = "consul-server.consul.svc:8500"
+      }
