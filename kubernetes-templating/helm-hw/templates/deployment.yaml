@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: busybox-deployment
-  namespace: homework
+  name: {{ include "helm-hw.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    app: busybox
+    {{- include "helm-hw.labels" . | nindent 4 }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.replicaCount }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -14,59 +14,69 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: busybox
+      {{- include "helm-hw.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: busybox
+        {{- include "helm-hw.labels" . | nindent 8 }}
     spec:
       initContainers:
-        - name: init-container
-          image: busybox:1.37
+        - name: {{ .Values.initContainer.name }}
+          image: "{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
+          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
           command:
             - sh
             - -c
             - |
-              wget -O /init/index.html https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+              wget -O /init/index.html {{ .Values.initContainer.indexUrl }}
           volumeMounts:
             - name: homework-volume
               mountPath: /init
 
       containers:
-        - name: web
-          image: busybox:1.37
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag }}"
+          imagePullPolicy: {{ .Values.container.image.pullPolicy }}
           command:
             - sh
             - -c
             - |
-              httpd -f -p 8000 -h /homework
+              httpd -f -p {{ .Values.container.port }} -h {{ .Values.container.workDir }}
           ports:
-            - containerPort: 8000
+            - name: http
+              containerPort: {{ .Values.container.port }}
 
           env:
-            # Define the environment variable
             - name: PLAYER_INITIAL_LIVES
               valueFrom:
                 configMapKeyRef:
-                  name: cm-demo           # The ConfigMap this value comes from.
-                  key: player_initial_lives # The key to fetch.
+                  name: {{ .Values.configMap.name }}
+                  key: player_initial_lives
 
           volumeMounts:
             - name: homework-volume
-              mountPath: /homework
+              mountPath: {{ .Values.container.workDir }}
             - name: config
-              mountPath: /homework/conf
+              mountPath: {{ .Values.container.workDir }}/conf
               readOnly: true
 
+          {{- if .Values.probes.liveness.enabled }}
           livenessProbe:
             httpGet:
-              path: /index.html
-              port: 8000
-              httpHeaders:
-                - name: Custom-Header
-                  value: Awesome
-            initialDelaySeconds: 3
-            periodSeconds: 3
+              path: {{ .Values.probes.liveness.path }}
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+          {{- end }}
+
+          {{- if .Values.probes.readiness.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probes.readiness.path }}
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+          {{- end }}
 
           lifecycle:
             preStop:
@@ -74,12 +84,12 @@ spec:
                 command:
                   - sh
                   - -c
-                  - rm -f /homework/index.html
+                  - rm -f {{ .Values.container.workDir }}/index.html
 
       volumes:
         - name: homework-volume
           persistentVolumeClaim:
-            claimName: semenov-pv-claim
+            claimName: {{ include "helm-hw.pvcName" . }}
         - name: config
           configMap:
-            name: cm-demo
+            name: {{ .Values.configMap.name }}

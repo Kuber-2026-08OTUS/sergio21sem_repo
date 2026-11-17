@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: busybox
-  namespace: homework
+  name: {{ include "helm-hw.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "helm-hw.labels" . | nindent 4 }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   selector:
-    app: busybox
+    {{- include "helm-hw.selectorLabels" . | nindent 4 }}
   ports:
-    - port: 8000
-      targetPort: 8000
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
