@@ -1,0 +1,19 @@
+{{- if .Values.gateway.enabled }}
+#https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/gateway-api/
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.gateway.namespace }}
+  labels:
+    {{- include "helm-hw.labels" . | nindent 4 }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className }}
+  listeners:
+    - name: {{ .Values.gateway.listenerName }}
+      protocol: HTTP
+      port: {{ .Values.gateway.port }}
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end }}
