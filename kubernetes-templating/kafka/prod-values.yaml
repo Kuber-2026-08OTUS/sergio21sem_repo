@@ -1,0 +1,19 @@
+# Kafka v3.5.2 для namespace prod.
+image:
+  registry: docker.io
+  repository: bitnamilegacy/kafka
+  tag: 3.5.2-debian-12-r30
+
+controller:
+  replicaCount: 5
+
+listeners:
+  client:
+    protocol: SASL_PLAINTEXT
+  interbroker:
+    protocol: SASL_PLAINTEXT
+
+sasl:
+  enabledMechanisms: PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
+  interBrokerMechanism: PLAIN
+  controllerMechanism: PLAIN

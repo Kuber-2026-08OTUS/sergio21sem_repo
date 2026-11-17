@@ -1,0 +1,21 @@
+repositories:
+  - name: bitnamicharts
+    url: registry-1.docker.io/bitnamicharts
+    oci: true
+
+releases:
+  - name: kafka
+    namespace: prod
+    createNamespace: true
+    chart: bitnamicharts/kafka
+    version: "24.0.14"
+    values:
+      - prod-values.yaml
+
+  - name: kafka
+    namespace: dev
+    createNamespace: true
+    chart: bitnamicharts/kafka
+    version: "32.4.3"
+    values:
+      - dev-values.yaml
