@@ -1,4 +1,3 @@
-# Kafka v3.5.2 для namespace prod.
 image:
   registry: docker.io
   repository: bitnamilegacy/kafka
