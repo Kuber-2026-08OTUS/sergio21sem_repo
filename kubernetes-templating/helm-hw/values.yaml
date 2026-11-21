@@ -1,0 +1,80 @@
+# Default values for helm-hw.
+
+# Namespace to deploy the application into.
+namespace: homework
+
+# Overrides for chart-generated names (best practice helpers).
+nameOverride: ""
+fullnameOverride: ""
+
+# Number of application replicas.
+replicaCount: 3
+
+# Init container: downloads index.html into the shared volume before start.
+initContainer:
+  name: init-container
+  image:
+    # Repository and tag are separate parameters.
+    repository: busybox
+    tag: "1.37"
+    pullPolicy: IfNotPresent
+  indexUrl: "https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
+
+# Main application container.
+container:
+  name: web
+  image:
+    # Repository and tag are separate parameters.
+    repository: busybox
+    tag: "1.37"
+    pullPolicy: IfNotPresent
+  port: 8000
+  workDir: /homework
+
+# Kubernetes Service in front of the application pods.
+service:
+  type: ClusterIP
+  port: 8000
+
+# Application ConfigMap.
+configMap:
+  name: cm-demo
+  playerInitialLives: "3"
+
+# PersistentVolumeClaim for the index.html content.
+pvc:
+  name: ""
+  storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+
+# Probes can be enabled/disabled via config.
+probes:
+  liveness:
+    enabled: true
+    path: /index.html
+    initialDelaySeconds: 3
+    periodSeconds: 3
+  readiness:
+    enabled: true
+    path: /index.html
+    initialDelaySeconds: 3
+    periodSeconds: 3
+
+# Gateway API: Gateway resource (usually lives in the ingress namespace).
+gateway:
+  enabled: true
+  name: traefik-gateway
+  namespace: traefik
+  className: traefik
+  listenerName: web-http
+  port: 8000
+
+# Gateway API: HTTPRoute binding the external hostname to the Service.
+httpRoute:
+  enabled: true
+  hostname: homework.otus
+
+# Redis community chart dependency.
+redis:
+  enabled: true

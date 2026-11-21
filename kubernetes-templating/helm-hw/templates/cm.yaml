@@ -1,0 +1,11 @@
+#https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "helm-hw.labels" . | nindent 4 }}
+data:
+  player_initial_lives: {{ .Values.configMap.playerInitialLives | quote }}
+  file: "some content from configMap"
